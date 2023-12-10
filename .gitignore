@@ -1,3 +1,5 @@
 # Ignore the Videos and images folder
 .avi
 images
+
+.idea
