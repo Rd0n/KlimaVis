@@ -70,8 +70,14 @@ def proc_file(file_name, proc_type='absolute', min=None, max=None, steps=None):
         # Add coastlines
         ax.coastlines(alpha=0.5, lw=0.3)
 
+        # Add padding to index
+        index = str(i)
+        while len(index) < 3:
+            index = '0' + index
+
+
         # Save frame as png whthout borders
-        plt.savefig(out_folder + '/tas' + str(i) + '.png', bbox_inches='tight', pad_inches=0, dpi=1000)
+        plt.savefig(out_folder + '/tas-' + index + '.png', bbox_inches='tight', pad_inches=0, dpi=1000)
         plt.close()
         log('Frame ' + str(i + 1) + ' of ' + str(steps) + ' done', short_name)
 

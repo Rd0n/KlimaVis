@@ -9,6 +9,7 @@ import multiprocessing
 if __name__ == '__main__':
 
     ncFiles = [nc for nc in os.listdir('data/tas_yearly') if nc.endswith(".nc")]
+
     # Calculate anomaly for each file
     #for file in ncFiles:
     #    p = multiprocessing.Process(target=calc_anomaly, args=(
