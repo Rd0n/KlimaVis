@@ -3,3 +3,6 @@
 images
 
 .idea
+
+# Ignore the data
+*.nc
