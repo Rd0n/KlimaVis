@@ -8,7 +8,7 @@ from cartopy.util import add_cyclic_point
 from video import make_video
 
 
-def proc_file(file_name, proc_type='absolute', min=None, max=None, steps=None):
+def proc_file(file_name, proc_type='absolute', min=None, max=None, comp=None, steps=None):
     log('Processing file ' + file_name + '...')
     # Load NetCDF file
     data = nc.Dataset(file_name)
@@ -52,6 +52,9 @@ def proc_file(file_name, proc_type='absolute', min=None, max=None, steps=None):
         # Get temperature of i-th timestep and project it on flat world map
         if proc_type == 'relative':
             tas = data.variables['tas'][i] - data.variables['tas'][0]
+        if proc_type == 'relative_to':
+            data2 = nc.Dataset('data/tas_yearly/' + comp + '.nc')
+            tas = data.variables['tas'][i] - data2.variables['tas'][0]
         else:
             tas = data.variables['tas'][i] - 273.15  # Kelvin to Celsius
         projection = ccrs.PlateCarree()  # Flat world map
@@ -109,11 +112,6 @@ def calc_anomaly(base_file, comp_file):
 
         if tas_vmax < np.max(tas_scale):
             tas_vmax = np.max(tas_scale)
-
-    if abs(tas_vmin) > tas_vmax:
-        tas_vmax = abs(tas_vmin)
-    else:
-        tas_vmin = -abs(tas_vmax)
 
     log(str(tas_vmin) + ", " + str(tas_vmax), base_file.split('/')[len(base_file.split('/')) - 1].split('.')[0])
     return tas_vmin, tas_vmax
