@@ -31,7 +31,7 @@ def proc_file(file_name, proc_type='absolute', min=None, max=None, steps=None):
     latitude = data.variables['lat']
 
     # Get minimum and maximum near-surface temperature in Celsius of the first timestep and use +-10 as range
-    if min is None and max is None:
+    if min is not None and max is not None:
         tas_vmin = min
         tas_vmax = max
 
