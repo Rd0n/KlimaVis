@@ -51,10 +51,10 @@ def proc_file(file_name, proc_type='absolute', min=None, max=None, comp=None, st
     for i in range(steps):
         # Get temperature of i-th timestep and project it on flat world map
         if proc_type == 'relative':
-            tas = data.variables['tas'][i] - data.variables['tas'][0]
+            tas = data.variables['tas'][i] - data.variables['tas'][0:50].mean(axis=0)
         if proc_type == 'relative_to':
             data2 = nc.Dataset('data/tas_yearly/' + comp + '.nc')
-            tas = data.variables['tas'][i] - data2.variables['tas'][0]
+            tas = data.variables['tas'][i] - data2.variables['tas'][0:50].mean(axis=0)
         else:
             tas = data.variables['tas'][i] - 273.15  # Kelvin to Celsius
         projection = ccrs.PlateCarree()  # Flat world map
@@ -105,7 +105,7 @@ def calc_anomaly(base_file, comp_file):
 
     for i in range(steps):
         # Get temperature of i-th timestep and project it on flat world map
-        tas_scale = comp_data.variables['tas'][i] - base_data.variables['tas'][0]
+        tas_scale = comp_data.variables['tas'][i] - base_data.variables['tas'][0:50].mean(axis=0)
 
         if tas_vmin > np.min(tas_scale):
             tas_vmin = np.min(tas_scale)
@@ -113,7 +113,9 @@ def calc_anomaly(base_file, comp_file):
         if tas_vmax < np.max(tas_scale):
             tas_vmax = np.max(tas_scale)
 
-    log(str(tas_vmin) + ", " + str(tas_vmax), base_file.split('/')[len(base_file.split('/')) - 1].split('.')[0])
+    log(str(tas_vmin) + ", " + str(tas_vmax),
+        base_file.split('/')[len(base_file.split('/')) - 1].split('.')[0] + ' - ' +
+        comp_file.split('/')[len(comp_file.split('/')) - 1].split('.')[0])
     return tas_vmin, tas_vmax
 
 
